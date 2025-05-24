@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import './App.css'
+import Sidebar from "./components/layout/sidebar";
+import Header from "./components/layout/header";
+import Dashboard from "./components/dashboard/dashboard";
+import AnatomyViewer from "./components/dashboard/AnatomyViewer";
+import CalendarWidget from "./components/dashboard/CalendarWidget";
+import UpcomingSchedule from "./components/dashboard/UpcomingSchedule";
+import ActivityChart from "./components/dashboard/ActivityChart";
+import StatsCards from "./components/dashboard/StatsCards";
+import AppointmentCard from "./components/common/AppointmentCard";
+import HealthMetric from "./components/common/HealthMetric";
+
+function DashboardLayout() {
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <Header />
+        <main className="flex-1 p-6 overflow-auto">
+          <Outlet /> {/* This will render the current route component */}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+
+function AuthLayout() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <Outlet />
+    </div>
+  );
+}
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <DashboardLayout />,
+    children: [
+      { index: true, element:<Dashboard /> },
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "anatomyviewer", element: <AnatomyViewer /> },
+      { path: "calendarwidget", element: <CalendarWidget /> },
+      { path: "upcomingschedule", element: <UpcomingSchedule /> },
+      { path: "activitychart", element: <ActivityChart /> },
+      { path: "statscards", element: <StatsCards /> },
+      {path: "appointmentcard", element: <AppointmentCard />},
+      { path: "healthmetric", element: <HealthMetric /> },
+    ],
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  return  <RouterProvider router={router} />;
+  
 }
 
 export default App
